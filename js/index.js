@@ -1,4 +1,4 @@
-const sizeOfCellsArray = new Array(9).fill('');
+const cellsArray = new Array(9).fill('');
 const board = document.getElementById('board');
 let currentSignal = 'O';
 const possibleCombinations = [
@@ -12,17 +12,24 @@ const possibleCombinations = [
   [2, 4, 6]
 ];
 let hasWinner = false;
-const gameInfo = document.getElementById('game-info');
+const gameInfo = document.getElementById('gameInfo');
 let shifts = 0;
-const restartBtn = document.getElementById('restartBtn');
+const victoriesOfO = document.getElementById('victoriesOfO');
+const victoriesOfX = document.getElementById('victoriesOfX');
 
 function start() {
   gameInfo.textContent = 'Começa com "O"';
+  loadVictories(victoriesOfO, "O",localStorage.getItem('signalO') || 0);
+  loadVictories(victoriesOfX, "X", localStorage.getItem('signalX') || 0);
 }
 
 start();
 
-sizeOfCellsArray.forEach((cell, index) => { // try use lodash
+function loadVictories(element, signal,value) {
+  element.textContent = `Vitórias do "${signal}": ${value}`;
+}
+
+cellsArray.forEach((_, index) => {
   const divCell = document.createElement('div');
   divCell.classList.add('cell');
   divCell.setAttribute('id', index);
@@ -59,12 +66,21 @@ function checkWinningPlayer(signal) {
     hasWinner = true;
     gameInfo.textContent = `"${signal}" ganhou!`;
     restartBtn.style.display = 'block';
+    saveInLocalStorage(signal);
   }
 
   if (shifts === 9 && !hasWinner) {
     gameInfo.textContent = `Empate!`;
     restartBtn.style.display = 'block';
   }
+}
+
+function saveInLocalStorage(signal) {
+  const key = `signal${signal}`;
+  let currentValue = localStorage.getItem(key) || 0;
+  currentValue++;
+  localStorage.setItem(key, currentValue);
+  loadVictories(document.getElementById(`victoriesOf${signal}`), signal, currentValue); // Atualizando valor na tela sem refresh da página
 }
 
 function isWinner(signal) {
