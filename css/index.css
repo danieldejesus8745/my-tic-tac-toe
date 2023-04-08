@@ -53,3 +53,19 @@ button {
   font-size: 12pt;
   display: none;
 }
+
+footer {
+  bottom: 0;
+  position: absolute;
+  padding: 10px 0;
+}
+
+footer a {
+  text-decoration: none;
+  color: blue;
+}
+
+.heart {
+  font-size: 20pt;
+  color: red;
+}
