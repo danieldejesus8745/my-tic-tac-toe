@@ -2,14 +2,22 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.game-info {
+  font-size: 20pt;
+  margin: 75px 75px;
+  font-weight: bold;
 }
 
 main {
@@ -25,4 +33,23 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.span {
+  font-size: 20pt;
+}
+
+.winnerCell {
+  font-weight: bold;
+  color: green;
+}
+
+button {
+  margin-top: 50px;
+  border: none;
+  outline: none;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 12pt;
+  display: none;
 }

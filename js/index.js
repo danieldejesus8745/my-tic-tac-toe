@@ -1,6 +1,6 @@
 const sizeOfCellsArray = new Array(9).fill('');
 const board = document.getElementById('board');
-let currentSignal = 'circle';
+let currentSignal = 'O';
 const possibleCombinations = [
   [0, 1, 2],
   [3, 4, 5],
@@ -12,6 +12,15 @@ const possibleCombinations = [
   [2, 4, 6]
 ];
 let hasWinner = false;
+const gameInfo = document.getElementById('game-info');
+let shifts = 0;
+const restartBtn = document.getElementById('restartBtn');
+
+function start() {
+  gameInfo.textContent = 'Começa com "O"';
+}
+
+start();
 
 sizeOfCellsArray.forEach((cell, index) => { // try use lodash
   const divCell = document.createElement('div');
@@ -23,21 +32,24 @@ sizeOfCellsArray.forEach((cell, index) => { // try use lodash
 });
 
 function clickCell(index) {
-  if (currentSignal === 'circle') {
-    markCell(index, 'O', 'x');
+  if (currentSignal === 'O') {
+    markCell(index, 'O', 'X');
   } else {
-    markCell(index, 'X', 'circle');
+    markCell(index, 'X', 'O');
   }
 }
 
 function markCell(index, signal, nextSignal) {
   const span = document.createElement('span');
   span.textContent = signal;
+  span.classList.add('span');
   const cell = document.getElementById(index);
   if (cell.childElementCount <= 0 && !hasWinner) {
     cell.innerHTML = '';
     cell.append(span);
     currentSignal = nextSignal;
+    gameInfo.textContent = `É a vez do "${nextSignal}"`;
+    shifts++;
     checkWinningPlayer(signal);
   }
 }
@@ -45,17 +57,39 @@ function markCell(index, signal, nextSignal) {
 function checkWinningPlayer(signal) {
   if (isWinner(signal)) {
     hasWinner = true;
-    console.log('Ganhou!');
+    gameInfo.textContent = `"${signal}" ganhou!`;
+    restartBtn.style.display = 'block';
+  }
+
+  if (shifts === 9 && !hasWinner) {
+    gameInfo.textContent = `Empate!`;
+    restartBtn.style.display = 'block';
   }
 }
 
 function isWinner(signal) {
   return possibleCombinations.some(combination => {
-    return combination.every(index => {
+    const result = combination.every(index => {
       const cell = document.getElementById(index);
       return cell?.firstChild?.firstChild?.nodeValue === signal;
-    })
-  })
+    });
+
+    if (result) markWinnerCells(combination);
+
+    return result;
+  });
+}
+
+function markWinnerCells(combination) {
+  combination.forEach(index => {
+    const cell = document.getElementById(index);
+    cell.classList.add('winnerCell');
+  });
+}
+
+function restart() {
+  location.reload();
+  restartBtn.style.display = 'none';
 }
 
 function setBorders(cell, index) {
